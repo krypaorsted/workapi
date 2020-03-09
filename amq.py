@@ -4,14 +4,23 @@ import uuid
 class amqListener(stomp.ConnectionListener):
     """ Basic listener to be extended """
     def __init__(self):
-        self.done = False
+        self.msgs = {}
+    def addMsg(self,correlationID, headers, body ):
+        self.msgs[correlationID] = {'headers': headers, 'body': body, 'response': {}}
+    def getResponse(self, correlationID):
+        if correlationID in self.msgs:
+            return self.msgs[correlationID]['response']
+        else:
+            return {}
     def setCorrelationID(self, correlationID):
         self.correlationID = correlationID
     def setDone(self, headers, message, error=False):
-        if headers['correlation-id'] == self.correlationID:
-            self.headers = headers
+        #if headers['correlation-id'] == self.correlationID:
+        if headers['correlation-id'] in self.msgs:
+            self.msgs[headers['correlation-id']]['response'] = message
+            """self.headers = headers
             self.message = message
-            self.done = True
+            self.done = True"""
 
     def on_error(self, headers, message):
         #print('received an error "%s"' % message)
@@ -65,14 +74,17 @@ class amqConn():
             raise Exception('SendTo required in header')
         sendTo = header['SendTo']
         replyTo = header['JMSReplyTo']
-        self.listener.setCorrelationID(header['JMSCorrelationID'])
+        #self.listener.setCorrelationID(header['JMSCorrelationID'])
         if self.listener:
+            self.listener.addMsg(header['JMSCorrelationID'], header, body)
             self.conn.subscribe(destination=replyTo, id=1, ack='auto', headers=header)
         self.conn.send(body=body, destination=sendTo, headers=header)
     
-    def getResponse(self):
-        if self.listener and self.listener.done:
-            return self.listener.message
+    def getResponse(self, correlationID):
+        if self.listener:
+            return self.listener.getResponse(correlationID)
+        else:
+            return {}
 
 
 

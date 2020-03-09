@@ -39,7 +39,7 @@ def main(argv):
     while response == '' and loop < 10:
         loop += 1
         time.sleep(10)
-        response = conn.getResponse()
+        response = conn.getResponse(header['JMSCorrelationID'])
 
     #Output response message
     print(response)
