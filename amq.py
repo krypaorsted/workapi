@@ -1,5 +1,4 @@
 import stomp
-import uuid
 
 class amqListener(stomp.ConnectionListener):
     """ Basic listener to be extended """
