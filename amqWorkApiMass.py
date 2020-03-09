@@ -45,7 +45,13 @@ def main(argv):
         elif opt in ("-s", "--path"):
             path = Path(arg)
         elif opt in ("-n", "--cnt"):
-            cnt = int(arg)
+            try:
+                cnt = int(arg)
+            except:
+                print("Message counter must be numerical")
+                error = True
+    if error == True:
+        return
     if not path and (not body or not headerCfg):
         print("Incorrect input") 
         return
