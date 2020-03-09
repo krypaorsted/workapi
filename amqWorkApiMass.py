@@ -29,6 +29,7 @@ def main(argv):
     headerCfg = {}
     path = ''
     cnt = 0
+    error = False
     try:
         opts, args = getopt.getopt(argv,"hn:b:m:s:",["cnt=", "body=","headerCfg=", "path="])
     except getopt.GetoptError:
