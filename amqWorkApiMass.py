@@ -28,7 +28,7 @@ def main(argv):
     body = {}
     headerCfg = {}
     path = ''
-    cnt = 0
+    cnt = 1
     error = False
     try:
         opts, args = getopt.getopt(argv,"hn:b:m:s:",["cnt=", "body=","headerCfg=", "path="])
@@ -64,13 +64,16 @@ def main(argv):
     #body = jsonDumps('config/body.json')
     #headerCfg = jsonLoad('config/header.json')
 
-    if cnt == 0:
-        cnt = 1
+    try:
+        conn = amq.amqConn(connCfg)
+        conn.open()
+    except Exception as e:
+        print(e)
+        return
     while cnt > 0:
         try:
             cnt = cnt - 1
-            conn = amq.amqConn(connCfg)
-            conn.open()
+           
             header = headerCfg
             header['JMSCorrelationID'] = str(uuid.uuid4())  #generate random uuid
             print("Send request with correlation id:"+str(header['JMSCorrelationID']))
