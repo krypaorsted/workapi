@@ -1,4 +1,4 @@
-import amq
+import amq    #custom classes for work api active MQ handling
 import json
 import sys
 import time
