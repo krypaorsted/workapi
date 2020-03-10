@@ -67,7 +67,7 @@ def main(argv):
     headerFile = 'header.json'
     body = {}
     header = {}
-    choices = ["mobileNotificationUpdate", "workOrderHeader", "assetFL"]
+    choices = ["mobileNotificationUpdate", "workOrderHeader", "assetFL", "mobileNotificationCreate"]
     pathToFile = Path('..')
     while cnt > 0:
         cnt = cnt - 1
