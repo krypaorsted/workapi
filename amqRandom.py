@@ -50,12 +50,16 @@ def main(argv):
     if error == True:
         return
 
+    #Initialize path handler with current dir
+    pathToFile = Path(__file__).parent
+
     """ Setup and open connection """
     if path:
         connCfg = jsonLoad(path / 'conn.json') 
     else:
         print("Default connection setup used")
-        connCfg = jsonLoad('config/conn.json') 
+        default = pathToFile / 'config/conn.json'
+        connCfg = jsonLoad(str(default)) 
     try:
         conn = amq.amqConn(connCfg)
         conn.open()
@@ -67,12 +71,13 @@ def main(argv):
     headerFile = 'header.json'
     body = {}
     header = {}
+    #Choices are direct subfolders in current path
     choices = ["mobileNotificationUpdate", "workOrderHeader", "assetFL", "mobileNotificationCreate"]
-    pathToFile = Path('..')
+    
     while cnt > 0:
         cnt = cnt - 1
         choice = random.choice(choices)
-        pathToFile = pathToFile.cwd() / choice
+        pathToFile = pathToFile / choice
         body = jsonDumps(pathToFile / bodyFile)
         header = jsonLoad(pathToFile / headerFile)
         try:
@@ -81,8 +86,6 @@ def main(argv):
             conn.sendRequest(header, body)
         except Exception as e:
             print(e)
-    
-    time.sleep(10)
 
     """ Close the connection """
     conn.close()
