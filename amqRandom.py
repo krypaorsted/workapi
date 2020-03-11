@@ -27,7 +27,7 @@ def main(argv):
     """ Main function 
         Read args, create connection, select random messages, send requests, close connection
     """
-    path = ''
+    pathToConfig = ''
     cnt = 1
     error = False
     try:
@@ -39,8 +39,8 @@ def main(argv):
         if opt == "-h":
             printHelp()
             return
-        elif opt in ("-c", "--path"):
-            path = Path(arg)
+        elif opt in ("-c", "--pathToConfig"):
+            pathToConfig = Path(arg)
         elif opt in ("-n", "--cnt"):
             try:
                 cnt = int(arg)
@@ -54,7 +54,7 @@ def main(argv):
     pathToFile = Path(__file__).parent
 
     """ Setup and open connection """
-    if path:
+    if pathToConfig:
         connCfg = jsonLoad(path / 'conn.json') 
     else:
         print("Default connection setup used")
@@ -74,10 +74,11 @@ def main(argv):
     #Choices are direct subfolders in current path
     choices = ["mobileNotificationUpdate", "workOrderHeader", "assetFL", "mobileNotificationCreate"]
     
+    root = pathToFile
     while cnt > 0:
         cnt = cnt - 1
         choice = random.choice(choices)
-        pathToFile = pathToFile / choice
+        pathToFile = root / choice
         body = jsonDumps(pathToFile / bodyFile)
         header = jsonLoad(pathToFile / headerFile)
         try:
