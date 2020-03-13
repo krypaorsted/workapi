@@ -66,7 +66,6 @@ def main(argv):
     except Exception as e:
         print(e)
         cnt = 0
-    
     bodyFile = 'body.json'
     headerFile = 'header.json'
     body = {}
@@ -84,7 +83,7 @@ def main(argv):
         try:
             header['JMSCorrelationID'] = str(uuid.uuid4())  #generate random uuid
             print(choice+": "+str(header['JMSCorrelationID']))
-            conn.sendRequest(header, body)
+            conn.sendRequest(header, body, False)
         except Exception as e:
             print(e)
 

@@ -64,7 +64,7 @@ class amqConn():
             self.conn.disconnect()
             self.state = amqConn.steteClosed
 
-    def sendRequest(self, header, body):
+    def sendRequest(self, header, body, subscribe=True):
         """ Send request 
             Subscribe for response if listener is instantiated and header contains JSMReplyTo
         """
@@ -76,7 +76,7 @@ class amqConn():
         sendTo = header['SendTo']
         replyTo = header['JMSReplyTo']
         #self.listener.setCorrelationID(header['JMSCorrelationID'])
-        if self.listener:
+        if self.listener and subscribe:
             self.listener.addMsg(header['JMSCorrelationID'], header, body)
             self.conn.subscribe(destination=replyTo, id=1, ack='auto', headers=header)
         self.conn.send(body=body, destination=sendTo, headers=header)

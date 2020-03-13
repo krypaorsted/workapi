@@ -69,18 +69,18 @@ def main(argv):
         conn.open()
     except Exception as e:
         print(e)
-        return
+
     while cnt > 0:
         try:
             cnt = cnt - 1
-           
             header = headerCfg
             header['JMSCorrelationID'] = str(uuid.uuid4())  #generate random uuid
             print("Send request with correlation id:"+str(header['JMSCorrelationID']))
-            conn.sendRequest(header, body)
+            conn.sendRequest(header, body, False)
         except Exception as e:
             print(e)
-            
+
+    time.sleep(10)        
 
     conn.close()
 
