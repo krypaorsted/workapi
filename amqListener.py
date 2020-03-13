@@ -21,7 +21,7 @@ def printHelp():
 
 def main(argv):
 
-    sleep = 30
+    sleep = 1
     error = False
     try:
         opts, args = getopt.getopt(argv,"ht:",["sleep="])
