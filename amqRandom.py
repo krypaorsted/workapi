@@ -55,7 +55,7 @@ def main(argv):
 
     """ Setup and open connection """
     if pathToConfig:
-        connCfg = jsonLoad(path / 'conn.json') 
+        connCfg = jsonLoad(pathToConfig / 'conn.json') 
     else:
         print("Default connection setup used")
         default = pathToFile / 'config/conn.json'
