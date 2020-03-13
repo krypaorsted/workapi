@@ -86,6 +86,8 @@ class amqConn():
     def subscribe(self, replyTo, headers=None):
         if self.conn and self.state == amqConn.stateOpen:
             self.conn.subscribe(destination=replyTo,id = 1, ack = 'auto', headers=headers)
+        else:
+            raise Exception('Connetion not open')
     
     def unsubscribe(self, replyTo):
         if self.conn and self.state == amqConn.stateOpen:
