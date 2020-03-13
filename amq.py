@@ -1,9 +1,11 @@
 import stomp
+import time
 
 class amqListener(stomp.ConnectionListener):
     """ Basic listener to be extended """
     def __init__(self):
         self.msgs = {}
+        self.resp =  []
     def addMsg(self,correlationID, headers, body ):
         self.msgs[correlationID] = {'headers': headers, 'body': body, 'response': {}}
     def getResponse(self, correlationID):
@@ -17,17 +19,12 @@ class amqListener(stomp.ConnectionListener):
         #if headers['correlation-id'] == self.correlationID:
         if headers['correlation-id'] in self.msgs:
             self.msgs[headers['correlation-id']]['response'] = message
-            """self.headers = headers
-            self.message = message
-            self.done = True"""
 
     def on_error(self, headers, message):
         print('received an error "%s"' % message)
         self.setDone(headers, message, True)
     def on_message(self, headers, message):
-        #print('received a message "%s"' % message)
-        print("Message received with correlation id: "+str(headers['correlation-id']))
-        #print(str(headers))
+        print("Message received. TS: "+str(time.time())+" ID: "+str(headers['correlation-id']))
         self.setDone(headers, message )
 
 
@@ -85,7 +82,7 @@ class amqConn():
     
     def subscribe(self, replyTo, headers=None):
         if self.conn and self.state == amqConn.stateOpen:
-            self.conn.subscribe(destination=replyTo,id = 1, ack = 'auto', headers=headers)
+            self.conn.subscribe(destination=replyTo, id = 1, ack = 'auto', headers=headers)
         else:
             raise Exception('Connetion not open')
     

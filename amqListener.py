@@ -56,13 +56,15 @@ def main(argv):
         return
 
     print('Waiting for responses ...')
-    """timeout = time.time() + sleep
+    timeout = time.time() + sleep
     while time.time() < timeout :
-        time.sleep(1)"""
-    time.sleep(sleep)
+        time.sleep(1)
 
+    
     conn.close()
     print("Connection closed")
+
+
 
 
 
