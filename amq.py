@@ -1,5 +1,6 @@
 import stomp
 import time
+from datetime import datetime
 
 class amqListener(stomp.ConnectionListener):
     """ Basic listener to be extended """
@@ -24,7 +25,7 @@ class amqListener(stomp.ConnectionListener):
         print('received an error "%s"' % message)
         self.setDone(headers, message, True)
     def on_message(self, headers, message):
-        print("Message received. TS: "+str(time.time())+" ID: "+str(headers['correlation-id']))
+        print("Message received. TS: "+datetime.utcfromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+" ID: "+str(headers['correlation-id']))
         self.setDone(headers, message )
 
 
