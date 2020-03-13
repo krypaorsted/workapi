@@ -22,10 +22,11 @@ class amqListener(stomp.ConnectionListener):
             self.done = True"""
 
     def on_error(self, headers, message):
-        #print('received an error "%s"' % message)
+        print('received an error "%s"' % message)
         self.setDone(headers, message, True)
     def on_message(self, headers, message):
         #print('received a message "%s"' % message)
+        print("Message received with correlation id: "+str(headers['correlation-id']))
         #print(str(headers))
         self.setDone(headers, message )
 
@@ -78,8 +79,13 @@ class amqConn():
         #self.listener.setCorrelationID(header['JMSCorrelationID'])
         if self.listener and subscribe:
             self.listener.addMsg(header['JMSCorrelationID'], header, body)
-            self.conn.subscribe(destination=replyTo, id=1, ack='auto', headers=header)
+            #self.conn.subscribe(destination=replyTo, id=1, ack='auto', headers=header)
+            self.subscribe(replyTo,header)
         self.conn.send(body=body, destination=sendTo, headers=header)
+    
+    def subscribe(self, replyTo, headers=None):
+        if self.conn and self.state == amqConn.stateOpen:
+            self.conn.subscribe(destination=replyTo,id = 1, ack = 'auto', headers=headers)
     
     def unsubscribe(self, replyTo):
         if self.conn and self.state == amqConn.stateOpen:

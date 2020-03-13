@@ -76,11 +76,11 @@ def main(argv):
             header = headerCfg
             header['JMSCorrelationID'] = str(uuid.uuid4())  #generate random uuid
             print("Send request with correlation id:"+str(header['JMSCorrelationID']))
-            conn.sendRequest(header, body, False)
+            conn.sendRequest(header, body)
         except Exception as e:
             print(e)
 
-    time.sleep(10)        
+    #time.sleep(10)        
 
     conn.close()
 
