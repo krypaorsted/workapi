@@ -45,10 +45,12 @@ class amqConn():
         """ Open connection """
         host = self.config['host']
         port = int(self.config['port'])
+        host2 = self.config['host2']
+        port2 = int(self.config['port2'])
         user = self.config['user']
         password = self.config['password']
         try:
-            self.conn = stomp.Connection(host_and_ports=[(host, port)])
+            self.conn = stomp.Connection(host_and_ports=[(host, port), (host2, port2)])
             self.listener = amqListener()
             self.conn.set_listener('', self.listener)
             self.conn.connect(user, password, wait=True)
@@ -79,6 +81,10 @@ class amqConn():
             self.conn.subscribe(destination=replyTo, id=1, ack='auto', headers=header)
         self.conn.send(body=body, destination=sendTo, headers=header)
     
+    def unsubscribe(self, replyTo):
+        if self.conn and self.state == amqConn.stateOpen:
+            self.conn.unsubscribe(replyTo)
+
     def getResponse(self, correlationID):
         if self.listener:
             return self.listener.getResponse(correlationID)
