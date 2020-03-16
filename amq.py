@@ -5,10 +5,13 @@ class amqListener(stomp.ConnectionListener):
     """ Basic listener to be extended """
     def __init__(self):
         self.done = False
+        self.correlationID_ = []
     def setCorrelationID(self, correlationID):
         self.correlationID = correlationID
+    def addCorrelationID(self, correlationID):
+        self.correlationID_.append(correlationID)
     def setDone(self, headers, message, error=False):
-        if headers['correlation-id'] == self.correlationID:
+        if headers['correlation-id'] == self.correlationID or headers['correlation-id'] in self.correlationID_:
             self.headers = headers
             self.message = message
             self.done = True
