@@ -1,4 +1,4 @@
-import amq
+import amq    #custom classes for work api active MQ handling
 import json
 import sys
 import time
@@ -16,7 +16,7 @@ def jsonDumps(file):
 
 
 def main(argv):
-    #TODO: add support of args
+
     connCfg = jsonLoad('config/conn.json')
     body = jsonDumps('config/body.json')
     headerCfg = jsonLoad('config/header.json')
@@ -28,21 +28,21 @@ def main(argv):
         header = headerCfg
         header['JMSCorrelationID'] = str(uuid.uuid4())  #generate random uuid
         print("Send request with correlation id:"+str(header['JMSCorrelationID']))
-        conn.sendRequest(header, body)
+        conn.sendRequest(header, body, False)
     except Exception as e:
         print(e)
         return
 
-    print('Waiting for response ...')
+    """ print('Waiting for response ...')
     loop  = 0
-    response = ''
-    while response == '' and loop < 10:
+    response = {}
+    while response == {} and loop < 10:
         loop += 1
-        time.sleep(10)
-        response = conn.getResponse()
+        time.sleep(2)
+        response = conn.getResponse(header['JMSCorrelationID'])
 
     #Output response message
-    print(response)
+    print(response)"""
 
     conn.close()
 
