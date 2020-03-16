@@ -16,7 +16,7 @@ def jsonDumps(file):
     return json.dumps(data)
 
 def printHelp():
-    """ Outputs list of possile options """
+    """ Outputs list of possible options """
     print("amqListener.py -t <timeout>")
 
 def main(argv):

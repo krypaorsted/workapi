@@ -87,6 +87,7 @@ def main(argv):
         except Exception as e:
             print(e)
 
+
     """ Close the connection """
     conn.close()
 
