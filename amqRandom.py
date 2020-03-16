@@ -82,8 +82,9 @@ def main(argv):
         header = jsonLoad(pathToFile / headerFile)
         try:
             header['JMSCorrelationID'] = str(uuid.uuid4())  #generate random uuid
-            print(choice+": "+str(header['JMSCorrelationID']))
             conn.sendRequest(header, body, False)
+            print(choice+": "+str(header['JMSCorrelationID']))
+            time.sleep(1)
         except Exception as e:
             print(e)
 
